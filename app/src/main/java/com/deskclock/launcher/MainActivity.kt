@@ -131,6 +131,7 @@ class MainActivity : Activity() {
             val arr = JSONArray()
             packageManager.queryIntentActivities(q, 0)
                 .filter { it.activityInfo.packageName != packageName }
+                .distinctBy { it.activityInfo.packageName }
                 .sortedBy { it.loadLabel(packageManager).toString().lowercase() }
                 .forEach { arr.put(JSONObject().put("n", it.loadLabel(packageManager).toString()).put("p", it.activityInfo.packageName)) }
             return arr.toString()
