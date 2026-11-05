@@ -347,7 +347,7 @@ $('#teamSearch').onkeydown=e=>{if(e.key==='Enter')addTeam()};
 renderTeamSettings();
 function renderMatches(){let L=[];try{L=JSON.parse(ST('mt','[]'))}catch(e){}
  const ids=TEAMS.map(t=>String(t.id));L=L.filter(x=>ids.includes(String(x.t&&x.t.id)));
- $('#mt').innerHTML=L.length?L.map(({t,e})=>{const d=new Date(e.d+'T'+(e.tm||'00:00:00')+(/Z|\\+/.test(e.tm||'')?'':'Z'));
+ $('#mt').innerHTML=L.length?L.map(({t,e})=>{const d=new Date(e.d+'T'+(e.tm||'00:00:00')+(/Z|\+/.test(e.tm||'')?'':'Z'));
   const ds=isNaN(d)?e.d:d.toLocaleString('ar-EG-u-nu-latn',{weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'});
   return `<div class="mc" style="--k:${t.c}"><small>${t.n}</small><div><bdi>${e.h}</bdi> × <bdi>${e.a}</bdi></div><span>${ds}</span></div>`}).join(''):(TEAMS.length?'<div class="mc" style="--k:#888"><small>المباريات</small><div>جارٍ تحميل المباريات…</div></div>':'<div class="mc" style="--k:#888"><small>الأندية المفضلة</small><div>أضف أنديتك من الإعدادات</div></div>')}
 async function loadMatches(){const out=[];
