@@ -1,6 +1,8 @@
 package com.deskclock.launcher
 
 import android.app.Activity
+import android.Manifest
+import android.content.pm.PackageManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -25,6 +27,7 @@ import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 
 class MainActivity : Activity() {
+    private val voicePermissionRequest = 4201
     private lateinit var web: WebView
 
     override fun onCreate(b: Bundle?) {
@@ -43,6 +46,16 @@ class MainActivity : Activity() {
         setContentView(web)
         web.loadUrl("file:///android_asset/index.html")
         immersive()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == voicePermissionRequest) {
+            val granted = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
+            getSharedPreferences("viro_voice", MODE_PRIVATE).edit().putBoolean("enabled", granted).apply()
+            if (granted) startService(Intent(this, VoiceWakeService::class.java).setAction(VoiceWakeService.ACTION_START))
+            web.evaluateJavascript("window.updateVoiceButton&&updateVoiceButton()", null)
+        }
     }
 
     private fun immersive() {
@@ -68,6 +81,25 @@ class MainActivity : Activity() {
     }
 
     inner class Bridge {
+        @JavascriptInterface fun voiceEnabled(): Boolean =
+            getSharedPreferences("viro_voice", MODE_PRIVATE).getBoolean("enabled", false)
+
+        @JavascriptInterface fun voiceToggle(): Boolean {
+            val prefs = getSharedPreferences("viro_voice", MODE_PRIVATE)
+            if (prefs.getBoolean("enabled", false)) {
+                prefs.edit().putBoolean("enabled", false).apply()
+                startService(Intent(this@MainActivity, VoiceWakeService::class.java).setAction(VoiceWakeService.ACTION_STOP))
+                return false
+            }
+            prefs.edit().putBoolean("enabled", true).apply()
+            if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                runOnUiThread { requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), voicePermissionRequest) }
+                return true
+            }
+            startService(Intent(this@MainActivity, VoiceWakeService::class.java).setAction(VoiceWakeService.ACTION_START))
+            return true
+        }
+
         private fun ctl(): MediaController? = try {
             val m = getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
             val l = m.getActiveSessions(ComponentName(this@MainActivity, NLService::class.java))
