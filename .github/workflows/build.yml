@@ -54,3 +54,22 @@ jobs:
         with:
           name: DeskClock-apk
           path: app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Publish GitHub Release
+        if: startsWith(github.event.head_commit.message, 'Release VIRO v1.0.1')
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.1
+          name: VIRO v1.0.1 — تحسين المساعد الصوتي
+          target_commitish: ${{ github.sha }}
+          body: |
+            ## ما الجديد؟
+            - تحسين استقبال الأوامر الصوتية بالعربية.
+            - دعم قول «يا فيرو» ثم الأمر بجملة ثانية خلال 12 ثانية.
+            - ردود صوتية أوضح عند فتح التطبيقات أو عدم توفرها.
+            - تحسين جاهزية محرك النطق وإعادة الاستماع بعد الرد.
+            - رفع رقم الإصدار إلى 1.0.1 لتثبيت التحديث فوق النسخة السابقة.
+            
+            ملاحظة: يتطلب تشغيل المساعد منح إذن الميكروفون.
+          files: app/build/outputs/apk/debug/app-debug.apk
+          fail_on_unmatched_files: true
