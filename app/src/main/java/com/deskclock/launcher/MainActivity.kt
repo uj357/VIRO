@@ -33,6 +33,13 @@ class MainActivity : Activity() {
     override fun onCreate(b: Bundle?) {
         super.onCreate(b)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        // Wake-word assistant starts automatically on the launcher home screen.
+        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+            getSharedPreferences("viro_voice", MODE_PRIVATE).edit().putBoolean("enabled", true).apply()
+            startService(Intent(this, VoiceWakeService::class.java).setAction(VoiceWakeService.ACTION_START))
+        } else {
+            requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), voicePermissionRequest)
+        }
         web = WebView(this)
         web.setBackgroundColor(Color.BLACK)
         web.settings.apply {
