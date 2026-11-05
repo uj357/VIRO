@@ -13,12 +13,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Extract project files from source archive
+      - name: Repair and extract source archive
         run: |
           if [ -f DeskClock-GitHub-Ready.zip.b64 ]; then
             base64 --decode DeskClock-GitHub-Ready.zip.b64 > /tmp/DeskClock.zip
+            zip -FF /tmp/DeskClock.zip --out /tmp/DeskClock-fixed.zip
+            unzip -t /tmp/DeskClock-fixed.zip
             mkdir -p /tmp/DeskClock
-            unzip -q /tmp/DeskClock.zip -d /tmp/DeskClock
+            unzip -q /tmp/DeskClock-fixed.zip -d /tmp/DeskClock
             cp -a /tmp/DeskClock/app .
             cp /tmp/DeskClock/build.gradle.kts /tmp/DeskClock/settings.gradle.kts /tmp/DeskClock/gradle.properties /tmp/DeskClock/README.md /tmp/DeskClock/.gitignore .
             rm DeskClock-GitHub-Ready.zip.b64
