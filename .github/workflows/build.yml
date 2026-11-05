@@ -56,20 +56,21 @@ jobs:
           path: app/build/outputs/apk/debug/app-debug.apk
 
       - name: Publish GitHub Release
-        if: startsWith(github.event.head_commit.message, 'Release VIRO v1.0.1')
+        if: startsWith(github.event.head_commit.message, 'Release VIRO v1.0.2')
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v1.0.1
-          name: VIRO v1.0.1 — تحسين المساعد الصوتي
+          tag_name: v1.0.2
+          name: VIRO v1.0.2 — مساعد صوتي بدون زر
           target_commitish: ${{ github.sha }}
           body: |
             ## ما الجديد؟
-            - تحسين استقبال الأوامر الصوتية بالعربية.
-            - دعم قول «يا فيرو» ثم الأمر بجملة ثانية خلال 12 ثانية.
-            - ردود صوتية أوضح عند فتح التطبيقات أو عدم توفرها.
-            - تحسين جاهزية محرك النطق وإعادة الاستماع بعد الرد.
-            - رفع رقم الإصدار إلى 1.0.1 لتثبيت التحديث فوق النسخة السابقة.
+            - إزالة زر المايك من الشاشة الرئيسية.
+            - تشغيل الاستماع تلقائياً عند فتح VIRO بعد منح إذن الميكروفون.
+            - عند قول «يا فيرو» يرد: «أهلاً يا جواد، تفضل شو بدك؟».
+            - عند طلب تطبيق يقول «ثواني يا جواد» ثم يفتحه ويؤكد صوتياً.
+            - دعم الأمر بجملة ثانية بعد كلمة التنبيه.
+            - رقم الإصدار 1.0.2 (versionCode 3) لتحديث النسخة السابقة.
             
-            ملاحظة: يتطلب تشغيل المساعد منح إذن الميكروفون.
+            ملاحظة: الاستماع المستمر عبر خدمة التعرف على الكلام قد يستهلك البطارية. يلزم منح إذن الميكروفون.
           files: app/build/outputs/apk/debug/app-debug.apk
           fail_on_unmatched_files: true
