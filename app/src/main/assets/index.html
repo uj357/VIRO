@@ -253,8 +253,8 @@ function applyClockPrefs(){
  $('#clockStyles').innerHTML=CLOCK_STYLES.map(x=>`<button class="pref-btn ${x.id===ST('clockStyle','colon')?'sel':''}" data-clock-style="${x.id}"><span class="pref-preview">${x.n}</span></button>`).join('');
  $('#clockSize').value=ST('clockSize','30');
  $('#clockWeight').classList.toggle('on',ST('clockBold','1')==='1');
- $('#clockFonts [data-font]').forEach(b=>b.onclick=()=>{SV('clockFont',b.dataset.font);applyClockPrefs();tick(true)});
- $('#clockStyles [data-clock-style]').forEach(b=>b.onclick=()=>{SV('clockStyle',b.dataset.clockStyle);applyClockPrefs();tick(true)});
+ $$('#clockFonts [data-font]').forEach(b=>b.onclick=()=>{SV('clockFont',b.dataset.font);applyClockPrefs();tick(true)});
+ $$('#clockStyles [data-clock-style]').forEach(b=>b.onclick=()=>{SV('clockStyle',b.dataset.clockStyle);applyClockPrefs();tick(true)});
  $('#clockSize').oninput=e=>{SV('clockSize',e.target.value);$('#tm').style.fontSize=e.target.value+'vh'};
  $('#clockWeight').onclick=()=>{SV('clockBold',ST('clockBold','1')==='1'?'0':'1');applyClockPrefs()};
 }
