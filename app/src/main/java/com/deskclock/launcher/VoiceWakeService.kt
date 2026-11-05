@@ -36,6 +36,7 @@ class VoiceWakeService : Service() {
     private var listening = false
     private var speaking = false
     private var waitingForCommandUntil = 0L
+    private var pendingAction: (() -> Unit)? = null
 
     private fun enabled(): Boolean =
         getSharedPreferences("viro_voice", MODE_PRIVATE).getBoolean("enabled", false)
@@ -79,7 +80,13 @@ class VoiceWakeService : Service() {
     private fun finishSpeaking() {
         handler.post {
             speaking = false
-            if (enabled()) scheduleRestart(350)
+            val action = pendingAction
+            pendingAction = null
+            if (action != null) {
+                action()
+            } else if (enabled()) {
+                scheduleRestart(350)
+            }
         }
     }
 
@@ -91,9 +98,9 @@ class VoiceWakeService : Service() {
                 stopForeground(true)
                 stopSelf()
             }
-            ACTION_START -> {
+            ACTION_START, null -> {
                 if (enabled()) {
-                    startForeground(NOTIFICATION_ID, notification("قل «يا فيرو» ثم الأمر"))
+                    startForeground(NOTIFICATION_ID, notification("فيرو جاهز — قل «يا فيرو»"))
                     beginRecognition()
                 } else {
                     stopSelf()
@@ -224,7 +231,7 @@ class VoiceWakeService : Service() {
         val spoken = normalizeSpeech(raw)
         if (spoken.isBlank()) return
 
-        val wakePhrases = listOf("يا فيرو", "يافيرو", "ya viro", "viro", "فيرو")
+        val wakePhrases = listOf("يا فيرو", "يافيرو", "اوكي فيرو", "okay viro", "ok viro", "hey viro", "يا viro", "ya viro", "viro", "فيرو")
         val wake = wakePhrases.firstOrNull { spoken.contains(it) }
         val command: String
 
@@ -240,18 +247,18 @@ class VoiceWakeService : Service() {
 
         if (command.isBlank()) {
             waitingForCommandUntil = SystemClock.elapsedRealtime() + 12_000L
-            speak("تفضل، سامعك. شو أعمل؟")
+            speak("اهلا يا جواد، تفضل شو بدك؟")
             return
         }
 
         when {
             command.contains("سبوتيفاي") || command.contains("سبوتفاي") ||
                 command.contains("spotify") || command.contains("سبوتي فاي") -> {
-                launchApp("com.spotify.music", listOf("spotify", "سبوتيفاي"), "سبوتيفاي")
+                speakThenLaunch("سبوتيفاي", "com.spotify.music", listOf("spotify", "سبوتيفاي"))
             }
 
             command.contains("يوتيوب") || command.contains("youtube") -> {
-                launchApp("com.google.android.youtube", listOf("youtube", "يوتيوب"), "يوتيوب")
+                speakThenLaunch("يوتيوب", "com.google.android.youtube", listOf("youtube", "يوتيوب"))
             }
 
             command.contains("كم الساعة") || command.contains("الساعه") ||
@@ -261,22 +268,59 @@ class VoiceWakeService : Service() {
             }
 
             command.contains("افتح") || command.contains("شغل") ||
-                command.contains("شغلي") || command.contains("open") -> {
+                command.contains("شغلي") || command.contains("بدي") ||
+                command.contains("open") || command.contains("launch") -> {
                 val appName = command
                     .replace("افتح", "")
                     .replace("شغل", "")
                     .replace("شغلي", "")
+                    .replace("بدي", "")
+                    .replace("لو سمحت", "")
                     .replace("open", "")
+                    .replace("launch", "")
                     .trim()
-                if (appName.isNotBlank() && launchAppByLabel(appName)) {
-                    speak("بفتح $appName")
+                if (appName.isNotBlank()) {
+                    speakThenOpenByLabel(appName)
                 } else {
-                    speak("مش لاقي التطبيق على الجهاز")
+                    speak("احكيلي شو التطبيق اللي بدك افتحه")
                 }
             }
 
-            else -> speak("سمعتك، بس ما فهمت الأمر. جرّب تقول افتح سبوتيفاي أو افتح يوتيوب")
+            else -> speak("سمعتك يا جواد، بس ما فهمت طلبك. احكي افتح سبوتيفاي أو يوتيوب")
         }
+    }
+
+    private fun speakThenLaunch(spokenName: String, packageName: String, labels: List<String>) {
+        speakThen("ثواني يا جواد، بفتح $spokenName") {
+            val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
+                ?: findLaunchIntent(labels)
+            if (launchIntent == null) {
+                speak("$spokenName مش مثبت على الجهاز")
+                return@speakThen
+            }
+            try {
+                launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(launchIntent)
+                speak("تفضل يا جواد، فتحت $spokenName")
+            } catch (_: Exception) {
+                speak("ما قدرت أفتح $spokenName")
+            }
+        }
+    }
+
+    private fun speakThenOpenByLabel(appName: String) {
+        speakThen("ثواني يا جواد، بدور على $appName") {
+            if (launchAppByLabel(appName)) {
+                speak("تفضل يا جواد، فتحت $appName")
+            } else {
+                speak("مش لاقي $appName على الجهاز")
+            }
+        }
+    }
+
+    private fun speakThen(message: String, action: () -> Unit) {
+        pendingAction = action
+        speak(message)
     }
 
     private fun launchApp(packageName: String, labels: List<String>, spokenName: String) {
@@ -343,6 +387,7 @@ class VoiceWakeService : Service() {
         recognizer = null
         listening = false
         waitingForCommandUntil = 0L
+        pendingAction = null
     }
 
     override fun onDestroy() {
