@@ -303,7 +303,6 @@ function renderDockSettings(){
   SV('dockApps',JSON.stringify(selectedDock));renderDock();
  });
 }
-$('#gb').onclick=()=>dr(1);
 $('#dr').onclick=e=>{if(e.target.id==='dr'||e.target.id==='dg')dr(0)};
 function loadDrawer(){const g=$('#dg');g.dataset.l='1';let L=allApps();
  g.innerHTML=L.map(a=>`<button class="ai" data-p="${a.p}"><u></u><span>${a.n}</span></button>`).join('');
