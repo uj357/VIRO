@@ -116,6 +116,28 @@ input[type=range]{width:100%;accent-color:#fff;height:5vh}
 .ctl #pp{width:12vh;height:12vh;background:#fff;opacity:1}
 .ctl #pp svg{width:5.6vh;height:5.6vh;fill:#000}
 .ctl .tg{opacity:.45}.ctl .tg.on{opacity:1;color:#1ed760}.ctl .tg.on svg{fill:#1ed760}
+
+/* personalization */
+.pref-hint{font-size:1.8vh;color:#9aa;line-height:1.6;margin:-.5vh 0 1.2vh}
+.pref-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1vh}
+.pref-btn{padding:1.25vh .8vh;border-radius:1.5vh;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.08);font-size:1.8vh;display:flex;align-items:center;justify-content:center;gap:.8vh;min-height:5.3vh}
+.pref-btn.sel{background:rgba(30,215,96,.2);border-color:#1ed760}
+.pref-preview{font-size:2.3vh;direction:ltr}
+#clockWeight{min-width:6.5vh}
+.app-choice,.team-choice{display:flex;align-items:center;gap:1.2vh;padding:1vh 1.2vh;border-radius:1.3vh;background:rgba(255,255,255,.07);font-size:1.8vh;min-width:0}
+.app-choice span,.team-choice span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.app-choice input,.team-choice input{width:2.5vh;height:2.5vh;accent-color:#1ed760;flex:none}
+#dockChoices,#teamChoices{display:flex;flex-direction:column;gap:.8vh;max-height:23vh;overflow:auto}
+.pref-input{min-width:0;flex:1;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);border-radius:1.3vh;padding:1.2vh 1.4vh;color:#fff;font:inherit;font-size:1.9vh;outline:none}
+.pref-input::placeholder{color:#899}
+.pref-add{padding:1.2vh 1.8vh;border-radius:1.3vh;background:#1ed760;color:#06140c;font-weight:700;font-size:1.8vh;white-space:nowrap}
+.pref-row{display:flex;gap:.8vh;align-items:center}
+.team-remove{padding:.5vh 1vh;border-radius:1vh;background:rgba(255,80,80,.15);color:#ff9c9c;font-size:1.8vh}
+#tm[data-clock-style=dot] .co{opacity:.75}
+#tm[data-clock-style=thin] .co{font-weight:300;opacity:.65}
+#tm[data-clock-style=arabic]{letter-spacing:0}
+#tm[data-clock-style=clean] .co{opacity:0}
+
 </style></head>
 <body data-x>
 <div id="bg"><div class="bl b1"></div><div class="bl b2"></div><div class="bl b3"></div></div>
@@ -145,6 +167,25 @@ input[type=range]{width:100%;accent-color:#fff;height:5vh}
   <h3>السطوع</h3><input type="range" id="br" min="5" max="100">
   <h3>الصوت</h3><input type="range" id="vo" min="0" max="100">
   <div class="row"><span>نظام 24 ساعة</span><div class="sw" id="s24"></div></div>
+
+  <h3>شكل الساعة</h3>
+  <div class="pref-grid" id="clockFonts"></div>
+  <h3>تنسيق الأرقام</h3>
+  <div class="pref-grid" id="clockStyles"></div>
+  <h3>حجم الساعة</h3><input type="range" id="clockSize" min="22" max="34" value="30">
+  <div class="row"><span>خط عريض</span><div class="sw" id="clockWeight"></div></div>
+
+  <h3>الأندية المفضلة</h3>
+  <p class="pref-hint">اختر حتى 4 أندية لعرض مبارياتها في البطاقات أسفل الشاشة.</p>
+  <div id="teamChoices"></div>
+  <div class="pref-row" style="margin-top:1vh">
+    <input class="pref-input" id="teamSearch" placeholder="ابحث عن نادي لإضافته">
+    <button class="pref-add" id="teamSearchBtn">إضافة</button>
+  </div>
+
+  <h3>اختصارات التطبيقات</h3>
+  <p class="pref-hint">حدد التطبيقات التي تريدها على الشريط الجانبي (حتى 5)، وأزل التحديد لإخفائها.</p>
+  <div id="dockChoices"></div>
   <h3>إعدادات الجهاز</h3>
   <div class="grid">
     <button class="qb" data-s="wifi">واي فاي</button><button class="qb" data-s="bt">بلوتوث</button><button class="qb" data-s="display">العرض</button>
@@ -190,11 +231,40 @@ $('#vo').value=A.getVolume();$('#vo').oninput=e=>A.volume(+e.target.value);
 $$('[data-s]').forEach(b=>b.onclick=()=>A.sys(b.dataset.s));
 $('#qacc').onclick=$('#noacc').onclick=()=>A.openAccess();
 
+
+/* ---------- personalized clock ---------- */
+const CLOCK_FONTS=[
+ {id:'modern',n:'عصري',css:'Roboto, "Noto Sans Arabic", sans-serif'},
+ {id:'classic',n:'كلاسيكي',css:'Georgia, "Noto Naskh Arabic", serif'},
+ {id:'digital',n:'رقمي',css:'"Courier New", monospace'},
+ {id:'soft',n:'ناعم',css:'Arial, "Noto Sans Arabic", sans-serif'},
+ {id:'condensed',n:'مكثف',css:'"Arial Narrow", Roboto, sans-serif'}
+];
+const CLOCK_STYLES=[
+ {id:'colon',n:'4:59',s:':'},{id:'dot',n:'4.59',s:'.'},
+ {id:'thin',n:'4 · 59',s:'·'},{id:'arabic',n:'٤:٥٩',s:':'},{id:'clean',n:'459',s:''}
+];
+function applyClockPrefs(){
+ const font=CLOCK_FONTS.find(x=>x.id===ST('clockFont','modern'))||CLOCK_FONTS[0];
+ $('#tm').style.fontFamily=font.css;
+ $('#tm').style.fontSize=(+ST('clockSize','30')||30)+'vh';
+ $('#tm').style.fontWeight=ST('clockBold','1')==='1'?'700':'400';
+ $('#clockFonts').innerHTML=CLOCK_FONTS.map(x=>`<button class="pref-btn ${x.id===font.id?'sel':''}" data-font="${x.id}"><span class="pref-preview" style="font-family:${x.css}">12:45</span><span>${x.n}</span></button>`).join('');
+ $('#clockStyles').innerHTML=CLOCK_STYLES.map(x=>`<button class="pref-btn ${x.id===ST('clockStyle','colon')?'sel':''}" data-clock-style="${x.id}"><span class="pref-preview">${x.n}</span></button>`).join('');
+ $('#clockSize').value=ST('clockSize','30');
+ $('#clockWeight').classList.toggle('on',ST('clockBold','1')==='1');
+ $('#clockFonts [data-font]').forEach(b=>b.onclick=()=>{SV('clockFont',b.dataset.font);applyClockPrefs();tick(true)});
+ $('#clockStyles [data-clock-style]').forEach(b=>b.onclick=()=>{SV('clockStyle',b.dataset.clockStyle);applyClockPrefs();tick(true)});
+ $('#clockSize').oninput=e=>{SV('clockSize',e.target.value);$('#tm').style.fontSize=e.target.value+'vh'};
+ $('#clockWeight').onclick=()=>{SV('clockBold',ST('clockBold','1')==='1'?'0':'1');applyClockPrefs()};
+}
+applyClockPrefs();
+
 /* ---------- overlays ---------- */
 const open={sp:0,dr:0,fs:0};
 function sp(on){open.sp=on;$('#sp').classList.toggle('on',on);$('#sc').classList.toggle('on',on||open.dr)}
 function dr(on){open.dr=on;$('#dr').classList.toggle('on',on);if(on)loadDrawer()}
-$('#sbtn').onclick=()=>{$('#vo').value=A.getVolume();sp(1)};
+$('#sbtn').onclick=()=>{$('#vo').value=A.getVolume();sp(1);renderTeamSettings();renderDockSettings()};
 $('#sc').onclick=()=>{sp(0)};
 window.onBack=function(home){if(open.fs)closeFS();else if(open.dr)dr(0);else if(open.sp)sp(0);else if(home){}};
 
@@ -204,35 +274,90 @@ function tick(f){const d=new Date();let h=d.getHours(),m=d.getMinutes(),ap='';
  const g=(h<5||h>=22)?'ليلة سعيدة':h<12?'صباح الخير':'مساء الخير';
  if(!h24){ap=h>=12?'م':'ص';h=h%12||12}else h=pad(h);
  const t=h+':'+pad(m)+ap;if(t===lastT&&!f)return;lastT=t;
- $('#tm').innerHTML=h+'<span class="co">:</span>'+pad(m);$('#ap').textContent=ap;$('#gr').textContent=g;
+ const cs=ST('clockStyle','colon');let hh=String(h),mm=pad(m),sep=({colon:':',dot:'.',thin:'·',arabic:':',clean:''})[cs]??':';if(cs==='arabic'){const ar=x=>x.replace(/[0-9]/g,d=>'٠١٢٣٤٥٦٧٨٩'[+d]);hh=ar(hh);mm=ar(mm)}$('#tm').dataset.clockStyle=cs;$('#tm').innerHTML=hh+'<span class="co">'+sep+'</span>'+mm;$('#ap').textContent=ap;$('#gr').textContent=g;
  $('#dt').textContent=d.toLocaleDateString('ar-EG-u-nu-latn',{weekday:'long',day:'numeric',month:'long'})}
 tick(1);setInterval(tick,1000);
 
+
 /* ---------- dock & drawer ---------- */
-const DOCK=[{p:'com.spotify.music',c:'sp',e:'♪'},{p:'com.android.vending',e:'▶'},{p:'com.sec.android.app.myfiles',e:'🗀'},{p:'com.google.android.youtube',e:'▶'}];
-$('#dock').innerHTML=DOCK.map((a,i)=>`<button class="tile ${a.c||''}" data-p="${a.p}" style="animation-delay:${.5+i*.1}s"><b>${a.e}</b></button>`).join('')+
- `<button class="tile gr" id="gb" style="animation-delay:.95s"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></button>`;
-$$('.tile[data-p]').forEach(t=>{const ic=A.icon(t.dataset.p);if(ic)t.innerHTML=`<img src="${ic}">`;
- t.onclick=()=>{if(!A.launch(t.dataset.p))toast('التطبيق غير مثبّت')}});
-$('#gb').onclick=()=>dr(1);$('#dr').onclick=e=>{if(e.target.id==='dr'||e.target.id==='dg')dr(0)};
-function loadDrawer(){const g=$('#dg');if(g.dataset.l)return;g.dataset.l=1;let L=[];try{L=JSON.parse(A.apps())}catch(e){}
+const DOCK_DEFAULT=['com.spotify.music','com.android.vending','com.sec.android.app.myfiles','com.google.android.youtube'];
+let selectedDock=[];try{selectedDock=JSON.parse(ST('dockApps',JSON.stringify(DOCK_DEFAULT)))}catch(e){selectedDock=DOCK_DEFAULT}
+if(!Array.isArray(selectedDock))selectedDock=DOCK_DEFAULT;
+let appsCache=null;
+function allApps(){if(!appsCache){try{appsCache=JSON.parse(A.apps())||[]}catch(e){appsCache=[]}}return appsCache}
+function renderDock(){
+ const known=allApps();
+ const entries=selectedDock.map(p=>known.find(a=>a.p===p)||{p,n:p});
+ $('#dock').innerHTML=entries.map((a,i)=>{const ic=A.icon(a.p);return `<button class="tile ${a.p==='com.spotify.music'?'sp':''}" data-p="${a.p}" style="animation-delay:${.5+i*.08}s">${ic?`<img src="${ic}">`:'<b>◇</b>'}</button>`}).join('')+
+  `<button class="tile gr" id="gb" style="animation-delay:.95s"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></button>`;
+ $$('.tile[data-p]').forEach(t=>{t.onclick=()=>{if(!A.launch(t.dataset.p))toast('التطبيق غير مثبّت')}});
+ $('#gb').onclick=()=>dr(1);
+}
+function renderDockSettings(){
+ const g=$('#dockChoices');if(!g)return;const L=allApps();
+ g.innerHTML=L.map(a=>`<label class="app-choice"><span>${a.n}</span><input type="checkbox" data-dock-app="${a.p}" ${selectedDock.includes(a.p)?'checked':''}></label>`).join('')||'<div class="pref-hint">لم يتم العثور على تطبيقات.</div>';
+ $$('[data-dock-app]').forEach(ch=>ch.onchange=()=>{
+  const p=ch.dataset.dockApp;
+  if(ch.checked){if(selectedDock.length>=5){ch.checked=false;toast('يمكنك اختيار 5 تطبيقات كحد أقصى');return}if(!selectedDock.includes(p))selectedDock.push(p)}
+  else selectedDock=selectedDock.filter(x=>x!==p);
+  SV('dockApps',JSON.stringify(selectedDock));renderDock();
+ });
+}
+$('#gb').onclick=()=>dr(1);
+$('#dr').onclick=e=>{if(e.target.id==='dr'||e.target.id==='dg')dr(0)};
+function loadDrawer(){const g=$('#dg');g.dataset.l='1';let L=allApps();
  g.innerHTML=L.map(a=>`<button class="ai" data-p="${a.p}"><u></u><span>${a.n}</span></button>`).join('');
  const items=$$('.ai');items.forEach(i=>i.onclick=()=>{dr(0);A.launch(i.dataset.p)});
  let k=0;(function ch(){for(let j=0;j<8&&k<items.length;j++,k++){const ic=A.icon(items[k].dataset.p);if(ic)items[k].firstChild.outerHTML=`<img src="${ic}">`}if(k<items.length)setTimeout(ch,40)})()}
+renderDock();
+
 
 /* ---------- matches ---------- */
 const KEY='123';
-const TEAMS=[{id:133739,n:'برشلونة',c:'#a50044'},{id:133738,n:'ريال مدريد',c:'#c9c9c9'},{id:133612,n:'مانشستر يونايتد',c:'#da291c'},{id:133714,n:'باريس سان جيرمان',c:'#2a6bd6'}];
+const TEAM_DEFAULT=[
+ {id:'133739',n:'برشلونة',c:'#a50044'},
+ {id:'133738',n:'ريال مدريد',c:'#c9c9c9'},
+ {id:'133612',n:'مانشستر يونايتد',c:'#da291c'},
+ {id:'133714',n:'باريس سان جيرمان',c:'#2a6bd6'}
+];
+let TEAMS=[];try{TEAMS=JSON.parse(ST('teams',JSON.stringify(TEAM_DEFAULT)))}catch(e){TEAMS=TEAM_DEFAULT}
+if(!Array.isArray(TEAMS))TEAMS=TEAM_DEFAULT;
+function saveTeams(){SV('teams',JSON.stringify(TEAMS));renderTeamSettings();renderMatches();loadMatches()}
+function renderTeamSettings(){
+ const g=$('#teamChoices');if(!g)return;
+ g.innerHTML=TEAMS.map(t=>`<div class="team-choice"><span>${t.n}</span><button class="team-remove" data-team-remove="${t.id}">إزالة</button></div>`).join('')||'<div class="pref-hint">لم تختر أي نادٍ بعد. أضف ناديك المفضل من الحقل أعلاه.</div>';
+ $$('[data-team-remove]').forEach(b=>b.onclick=()=>{TEAMS=TEAMS.filter(t=>String(t.id)!==String(b.dataset.teamRemove));saveTeams()});
+}
+async function addTeam(){
+ const input=$('#teamSearch'),name=input.value.trim();if(!name){toast('اكتب اسم النادي أولاً');return}
+ if(TEAMS.length>=4){toast('يمكن عرض 4 أندية كحد أقصى');return}
+ const btn=$('#teamSearchBtn');btn.disabled=true;btn.textContent='...';
+ try{
+  const r=await fetch('https://www.thesportsdb.com/api/v1/json/'+KEY+'/searchteams.php?t='+encodeURIComponent(name));
+  const j=await r.json(),x=j.teams&&j.teams[0];
+  if(!x){toast('لم يتم العثور على النادي');return}
+  if(TEAMS.some(t=>String(t.id)===String(x.idTeam))){toast('هذا النادي موجود بالفعل');return}
+  const raw=String(x.strColour1||'').replace('#','');
+  const color=/^[0-9a-f]{6}$/i.test(raw)?'#'+raw:'#888888';
+  TEAMS.push({id:String(x.idTeam),n:x.strTeam||name,c:color});input.value='';saveTeams();toast('تمت إضافة '+(x.strTeam||name));
+ }catch(e){toast('تعذر البحث، تحقق من الاتصال بالإنترنت')}
+ finally{btn.disabled=false;btn.textContent='إضافة'}
+}
+$('#teamSearchBtn').onclick=addTeam;
+$('#teamSearch').onkeydown=e=>{if(e.key==='Enter')addTeam()};
+renderTeamSettings();
 function renderMatches(){let L=[];try{L=JSON.parse(ST('mt','[]'))}catch(e){}
- const now=Date.now();
- $('#mt').innerHTML=L.length?L.map(({t,e})=>{const d=new Date(e.d+'T'+(e.tm||'00:00:00')+(/Z|\+/.test(e.tm||'')?'':'Z'));
+ const ids=TEAMS.map(t=>String(t.id));L=L.filter(x=>ids.includes(String(x.t&&x.t.id)));
+ $('#mt').innerHTML=L.length?L.map(({t,e})=>{const d=new Date(e.d+'T'+(e.tm||'00:00:00')+(/Z|\\+/.test(e.tm||'')?'':'Z'));
   const ds=isNaN(d)?e.d:d.toLocaleString('ar-EG-u-nu-latn',{weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'});
-  return `<div class="mc" style="--k:${t.c}"><small>${t.n}</small><div><bdi>${e.h}</bdi> × <bdi>${e.a}</bdi></div><span>${ds}</span></div>`}).join(''):'<div class="mc" style="--k:#888"><small>المباريات</small><div>جارٍ التحميل…</div></div>'}
+  return `<div class="mc" style="--k:${t.c}"><small>${t.n}</small><div><bdi>${e.h}</bdi> × <bdi>${e.a}</bdi></div><span>${ds}</span></div>`}).join(''):(TEAMS.length?'<div class="mc" style="--k:#888"><small>المباريات</small><div>جارٍ تحميل المباريات…</div></div>':'<div class="mc" style="--k:#888"><small>الأندية المفضلة</small><div>أضف أنديتك من الإعدادات</div></div>')}
 async function loadMatches(){const out=[];
+ if(!TEAMS.length){SV('mt','[]');renderMatches();return}
  for(const t of TEAMS){try{const r=await fetch(`https://www.thesportsdb.com/api/v1/json/${KEY}/eventsnext.php?id=${t.id}`);const j=await r.json();const e=j.events&&j.events[0];
   if(e)out.push({t,e:{h:e.strHomeTeam,a:e.strAwayTeam,d:e.dateEvent,tm:e.strTime,l:e.strLeague}})}catch(x){}}
- if(out.length){SV('mt',JSON.stringify(out));renderMatches()}}
+ SV('mt',JSON.stringify(out));renderMatches()}
 renderMatches();loadMatches();setInterval(loadMatches,3*3600*1000);
+
 
 /* ---------- media ---------- */
 let S={},key='',artTry=0,artOk=false,lyr=[],li=-2,playing=false;
