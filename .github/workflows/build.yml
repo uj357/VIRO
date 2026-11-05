@@ -1,0 +1,49 @@
+name: Build APK
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract project files from source archive
+        run: |
+          if [ -f DeskClock-GitHub-Ready.zip.b64 ]; then
+            base64 --decode DeskClock-GitHub-Ready.zip.b64 > /tmp/DeskClock.zip
+            mkdir -p /tmp/DeskClock
+            unzip -q /tmp/DeskClock.zip -d /tmp/DeskClock
+            cp -a /tmp/DeskClock/app .
+            cp /tmp/DeskClock/build.gradle.kts /tmp/DeskClock/settings.gradle.kts /tmp/DeskClock/gradle.properties /tmp/DeskClock/README.md /tmp/DeskClock/.gitignore .
+            rm DeskClock-GitHub-Ready.zip.b64
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A
+            git commit -m "Add DeskClock Android project source"
+            git push
+          fi
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: android-actions/setup-android@v3
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.7"
+
+      - name: Build debug APK
+        run: gradle assembleDebug --no-daemon
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DeskClock-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
