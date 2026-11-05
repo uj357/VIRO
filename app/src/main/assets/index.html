@@ -12,10 +12,12 @@ button{font:inherit;color:inherit;background:none;border:0}
 [data-t=ember]{--a:#0a0303;--b:#8a1a1a;--c:#5a2a0a;--t:#ffd8d0}
 [data-t=mono]{--a:#000;--b:#444;--c:#222;--t:#eee}
 #bg{position:fixed;inset:0;background:var(--a);overflow:hidden}
-.bl{position:absolute;border-radius:50%;opacity:.7;will-change:transform;animation:fl 26s ease-in-out infinite alternate}
+.bl{position:absolute;border-radius:50%;opacity:.82;will-change:transform;animation:fl 26s ease-in-out infinite alternate;filter:blur(2px)}
 .b1{width:70vw;height:70vw;left:-20vw;top:-30vw;background:radial-gradient(circle,var(--b),transparent 68%)}
 .b2{width:60vw;height:60vw;right:-15vw;bottom:-28vw;background:radial-gradient(circle,var(--c),transparent 68%);animation-duration:34s;animation-delay:-9s}
-.b3{width:40vw;height:40vw;right:22vw;top:2vh;background:radial-gradient(circle,var(--b),transparent 68%);opacity:.35;animation-duration:42s;animation-delay:-17s}
+.b3{width:40vw;height:40vw;right:22vw;top:2vh;background:radial-gradient(circle,var(--b),transparent 68%);opacity:.48;animation-duration:42s;animation-delay:-17s}
+.b4{width:38vw;height:38vw;left:35vw;bottom:5vh;background:radial-gradient(circle,var(--c),transparent 68%);opacity:.42;animation-duration:38s;animation-delay:-12s}
+.motion-off .bl{animation:none!important}
 @keyframes fl{to{transform:translate(9vw,7vh) scale(1.25)}}
 #bg::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 45% 45%,transparent 25%,rgba(0,0,0,.7))}
 .abs{position:absolute}
@@ -138,9 +140,75 @@ input[type=range]{width:100%;accent-color:#fff;height:5vh}
 #tm[data-clock-style=arabic]{letter-spacing:0}
 #tm[data-clock-style=clean] .co{opacity:0}
 
+
+/* organized settings */
+#sp{background:rgba(9,13,16,.96);backdrop-filter:blur(24px);border-right:1px solid rgba(255,255,255,.08);padding:2.3vh 2.2vh 4vh}
+.settings-top{display:flex;align-items:center;justify-content:space-between;gap:2vh;padding:1vh .4vh 2.2vh;position:sticky;top:-2.3vh;z-index:5;background:rgba(9,13,16,.97);backdrop-filter:blur(18px)}
+.settings-top h2{font-size:3.2vh;letter-spacing:-.02em}
+.settings-top p{font-size:1.65vh;color:#94a3a8;margin-top:.4vh}
+.settings-mark{width:5.8vh;height:5.8vh;border-radius:1.8vh;background:rgba(255,255,255,.09);display:flex;align-items:center;justify-content:center;color:#dce6e8;flex:none}
+.settings-mark svg{width:3.1vh;height:3.1vh}
+.settings-group{border:1px solid rgba(255,255,255,.085);border-radius:2.1vh;background:rgba(255,255,255,.045);margin:1.15vh 0;overflow:hidden}
+.settings-group>summary{list-style:none;display:flex;align-items:center;gap:1.4vh;padding:1.65vh 1.5vh;cursor:pointer;min-height:8.2vh}
+.settings-group>summary::-webkit-details-marker{display:none}
+.setting-icon{width:5.1vh;height:5.1vh;border-radius:1.55vh;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.085);color:#e2ebec;flex:none}
+.setting-icon svg{width:2.8vh;height:2.8vh;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.setting-title{display:flex;flex-direction:column;gap:.35vh;flex:1;min-width:0}
+.setting-title b{font-size:2.05vh;font-weight:650}
+.setting-title small{font-size:1.55vh;color:#8f9da1;line-height:1.4}
+.setting-chevron{width:2.2vh;height:2.2vh;opacity:.65;transition:transform .25s;flex:none}
+.settings-group[open] .setting-chevron{transform:rotate(180deg)}
+.settings-body{padding:0 1.5vh 1.7vh;border-top:1px solid rgba(255,255,255,.07)}
+.settings-body h3{font-size:1.8vh;margin:1.7vh 0 .8vh;color:#b7c5c8;font-weight:650}
+.settings-body .pref-hint{font-size:1.55vh;margin:.2vh 0 1vh}
+.settings-line{display:flex;align-items:center;justify-content:space-between;gap:1.3vh;padding:1.2vh 0}
+.settings-line label{font-size:1.9vh;color:#e1e8e9}
+.settings-line small{font-size:1.45vh;color:#89999d;display:block;margin-top:.25vh}
+.settings-body .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:.9vh}
+#sp .qb{padding:1.15vh .5vh;min-height:7.1vh;border-radius:1.55vh;background:rgba(255,255,255,.075);font-size:1.5vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.65vh}
+#sp .qb svg{width:2.5vh;height:2.5vh;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+#sp .qb:active{background:rgba(255,255,255,.16)}
+#sp input[type=range]{height:3.7vh}
+#sp .wp{height:7.4vh;border-radius:1.55vh;font-size:1.6vh;align-items:flex-end}
+#sp .pref-grid{gap:.75vh}
+#sp .pref-btn{min-height:4.5vh;padding:.9vh .5vh;font-size:1.55vh}
+#sp .pref-preview{font-size:2vh}
+#sp .row{font-size:1.8vh}
+#sp .sw{width:5.8vh;height:3.2vh;flex:none}
+#sp .sw::after{width:2.4vh;height:2.4vh;top:.4vh;right:.4vh}
+#sp .sw.on::after{right:3vh}
+#sp #clockWeight{min-width:5.8vh}
+#dockChoices,#teamChoices{max-height:22vh}
+.team-choice{min-height:5vh}
+.team-choice .team-symbol{width:2.5vh;height:2.5vh;flex:none;color:#9eafb3}
+.team-choice .team-symbol svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.team-remove{display:flex;align-items:center;gap:.5vh;padding:.65vh 1vh}
+.team-remove svg{width:1.8vh;height:1.8vh;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.team-search-row{display:flex;gap:.7vh;align-items:center;margin-top:1vh}
+.team-search-row .pref-input{font-size:1.7vh;padding:1.1vh 1.2vh}
+.team-search-row .pref-add{display:flex;gap:.6vh;align-items:center}
+.team-search-row .pref-add svg{width:1.8vh;height:1.8vh;fill:none;stroke:currentColor;stroke-width:2}
+.match-tools{display:flex;align-items:center;justify-content:space-between;gap:1vh;margin-top:1.7vh}
+.match-tools span{font-size:1.65vh;color:#aab8bb}
+.match-refresh{display:flex;align-items:center;gap:.6vh;padding:.8vh 1.1vh;border-radius:1.2vh;background:rgba(255,255,255,.09);font-size:1.55vh}
+.match-refresh svg{width:1.9vh;height:1.9vh;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.match-refresh:disabled{opacity:.5}
+#teamUpcoming{display:flex;flex-direction:column;gap:.8vh}
+.team-match-card{padding:1.35vh 1.3vh;border-radius:1.55vh;background:rgba(255,255,255,.065);border:1px solid rgba(255,255,255,.055)}
+.match-league{font-size:1.45vh;color:#95a5a9;margin-bottom:.65vh;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.match-fixture{display:flex;align-items:center;justify-content:space-between;gap:.8vh;font-size:1.75vh;font-weight:650}
+.match-fixture span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.match-fixture b{font-size:1.55vh;color:#9eacaf;font-weight:500;flex:none}
+.match-time{display:flex;align-items:center;gap:1.4vh;margin-top:.9vh;color:#bac6c8;font-size:1.5vh;flex-wrap:wrap}
+.match-time span{display:flex;align-items:center;gap:.45vh}
+.match-time svg{width:1.65vh;height:1.65vh;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.match-empty{padding:1.8vh 1.2vh;border-radius:1.4vh;background:rgba(255,255,255,.04);font-size:1.6vh;line-height:1.6;color:#9aa9ac}
+.app-choice{min-height:4.5vh}
+@media (max-width:700px){#sp{width:min(92vw,470px)}}
+
 </style></head>
 <body data-x>
-<div id="bg"><div class="bl b1"></div><div class="bl b2"></div><div class="bl b3"></div></div>
+<div id="bg"><div class="bl b1"></div><div class="bl b2"></div><div class="bl b3"></div><div class="bl b4"></div></div>
 
 <button id="sbtn" class="abs rise"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>الإعدادات</button>
 
@@ -161,37 +229,98 @@ input[type=range]{width:100%;accent-color:#fff;height:5vh}
 <div id="dock" class="abs"></div>
 
 <div id="sc" class="scrim"></div>
+
 <div id="sp">
-  <h2>الإعدادات</h2>
-  <h3>الخلفية</h3><div class="grid" id="wps"></div>
-  <h3>السطوع</h3><input type="range" id="br" min="5" max="100">
-  <h3>الصوت</h3><input type="range" id="vo" min="0" max="100">
-  <div class="row"><span>نظام 24 ساعة</span><div class="sw" id="s24"></div></div>
-
-  <h3>شكل الساعة</h3>
-  <div class="pref-grid" id="clockFonts"></div>
-  <h3>تنسيق الأرقام</h3>
-  <div class="pref-grid" id="clockStyles"></div>
-  <h3>حجم الساعة</h3><input type="range" id="clockSize" min="22" max="34" value="30">
-  <div class="row"><span>خط عريض</span><div class="sw" id="clockWeight"></div></div>
-
-  <h3>الأندية المفضلة</h3>
-  <p class="pref-hint">اختر حتى 4 أندية لعرض مبارياتها في البطاقات أسفل الشاشة.</p>
-  <div id="teamChoices"></div>
-  <div class="pref-row" style="margin-top:1vh">
-    <input class="pref-input" id="teamSearch" placeholder="ابحث عن نادي لإضافته">
-    <button class="pref-add" id="teamSearchBtn">إضافة</button>
+  <div class="settings-top">
+    <div><h2>الإعدادات</h2><p>كل إعدادات VIRO مرتبة بمكانها</p></div>
+    <div class="settings-mark"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></div>
   </div>
 
-  <h3>اختصارات التطبيقات</h3>
-  <p class="pref-hint">حدد التطبيقات التي تريدها على الشريط الجانبي (حتى 5)، وأزل التحديد لإخفائها.</p>
-  <div id="dockChoices"></div>
-  <h3>إعدادات الجهاز</h3>
-  <div class="grid">
-    <button class="qb" data-s="wifi">واي فاي</button><button class="qb" data-s="bt">بلوتوث</button><button class="qb" data-s="display">العرض</button>
-    <button class="qb" data-s="sound">الصوت</button><button class="qb" data-s="battery">البطارية</button><button class="qb" data-s="date">الوقت</button>
-    <button class="qb" data-s="home">اللانشر</button><button class="qb" id="qacc">إذن الموسيقى</button><button class="qb" data-s="all">كل الإعدادات</button>
-  </div>
+  <details class="settings-group" open>
+    <summary>
+      <span class="setting-icon"><svg viewBox="0 0 24 24"><path d="M12 3v2m0 14v2M3 12h2m14 0h2M5.64 5.64l1.42 1.42m9.88 9.88 1.42 1.42m0-12.72-1.42 1.42m-9.88 9.88-1.42 1.42"/><circle cx="12" cy="12" r="5"/></svg></span>
+      <span class="setting-title"><b>المظهر والخلفية</b><small>الخلفيات المتحركة والسطوع</small></span>
+      <svg class="setting-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+    </summary>
+    <div class="settings-body">
+      <h3>الخلفية المتحركة</h3><div class="grid" id="wps"></div>
+      <div class="settings-line"><div><label>حركة الخلفية</label><small>تدرجات ضوئية تتحرك بهدوء</small></div><div class="sw" id="bgMotion" role="switch" aria-label="حركة الخلفية"></div></div>
+      <h3>سطوع الشاشة</h3><input type="range" id="br" min="5" max="100">
+    </div>
+  </details>
+
+  <details class="settings-group">
+    <summary>
+      <span class="setting-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/><path d="M7.5 3.8 6 2.5M16.5 3.8 18 2.5"/></svg></span>
+      <span class="setting-title"><b>الساعة والتنسيق</b><small>الخط والأرقام وحجم الساعة</small></span>
+      <svg class="setting-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+    </summary>
+    <div class="settings-body">
+      <h3>شكل الخط</h3><div class="pref-grid" id="clockFonts"></div>
+      <h3>تنسيق الأرقام</h3><div class="pref-grid" id="clockStyles"></div>
+      <h3>حجم الساعة</h3><input type="range" id="clockSize" min="22" max="34" value="30">
+      <div class="settings-line"><div><label>خط عريض</label><small>إظهار الأرقام بسماكة أكبر</small></div><div class="sw" id="clockWeight" role="switch" aria-label="خط عريض"></div></div>
+      <div class="settings-line"><div><label>نظام 24 ساعة</label><small>التبديل بين 12 و24 ساعة</small></div><div class="sw" id="s24" role="switch" aria-label="نظام 24 ساعة"></div></div>
+    </div>
+  </details>
+
+  <details class="settings-group" open>
+    <summary>
+      <span class="setting-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8.5 8.5 7 7M15.5 8.5l-7 7M12 3v3m0 12v3m9-9h-3M6 12H3"/></svg></span>
+      <span class="setting-title"><b>الأندية المفضلة</b><small>أضف أنديتك وتابع موعد المباراة القادمة</small></span>
+      <svg class="setting-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+    </summary>
+    <div class="settings-body">
+      <h3>الأندية المختارة</h3>
+      <p class="pref-hint">اختر حتى 4 أندية، ويمكنك حذف أي نادٍ وإضافة غيره.</p>
+      <div id="teamChoices"></div>
+      <div class="team-search-row">
+        <input class="pref-input" id="teamSearch" placeholder="اسم النادي بالعربي أو الإنجليزي">
+        <button class="pref-add" id="teamSearchBtn"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>إضافة</button>
+      </div>
+      <div class="match-tools"><span>مواعيد المباريات القادمة</span><button class="match-refresh" id="matchRefreshBtn"><svg viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.5 9A7.5 7.5 0 0 1 18 6l2 2M4 16l2 2a7.5 7.5 0 0 0 12.5-3"/></svg>تحديث</button></div>
+      <div id="teamUpcoming"><div class="match-empty">جارٍ تحميل مواعيد المباريات...</div></div>
+    </div>
+  </details>
+
+  <details class="settings-group">
+    <summary>
+      <span class="setting-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg></span>
+      <span class="setting-title"><b>اختصارات التطبيقات</b><small>التطبيقات الظاهرة على الشريط الجانبي</small></span>
+      <svg class="setting-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+    </summary>
+    <div class="settings-body">
+      <h3>التطبيقات الظاهرة</h3>
+      <p class="pref-hint">اختر حتى 5 تطبيقات. أزل التحديد لإخفاء التطبيق من الشريط.</p>
+      <div id="dockChoices"></div>
+    </div>
+  </details>
+
+  <details class="settings-group">
+    <summary>
+      <span class="setting-icon"><svg viewBox="0 0 24 24"><path d="M2 8.5a15 15 0 0 1 20 0M5 12a10.5 10.5 0 0 1 14 0m-10.5 3.5a5.5 5.5 0 0 1 7 0M12 19h.01"/></svg></span>
+      <span class="setting-title"><b>اتصالات وإعدادات الجهاز</b><small>الشبكة والبلوتوث والصوت والنظام</small></span>
+      <svg class="setting-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+    </summary>
+    <div class="settings-body">
+      <h3>الاتصال</h3>
+      <div class="grid">
+        <button class="qb" data-s="wifi"><svg viewBox="0 0 24 24"><path d="M2 8.5a15 15 0 0 1 20 0M5 12a10.5 10.5 0 0 1 14 0m-10.5 3.5a5.5 5.5 0 0 1 7 0M12 19h.01"/></svg><span>واي فاي</span></button>
+        <button class="qb" data-s="bt"><svg viewBox="0 0 24 24"><path d="m7 7 10 10-5 4V3l5 4L7 17"/></svg><span>بلوتوث</span></button>
+        <button class="qb" data-s="all"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>كل الإعدادات</span></button>
+      </div>
+      <h3>الجهاز</h3>
+      <div class="grid">
+        <button class="qb" data-s="display"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg><span>الشاشة</span></button>
+        <button class="qb" data-s="sound"><svg viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6l-5 4H4z"/><path d="M17 9a5 5 0 0 1 0 6m2.5-8.5a8.5 8.5 0 0 1 0 11"/></svg><span>الصوت</span></button>
+        <button class="qb" data-s="battery"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="17" height="10" rx="2"/><path d="M22 10v4M7 10h6v4H7z"/></svg><span>البطارية</span></button>
+        <button class="qb" data-s="date"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg><span>التاريخ والوقت</span></button>
+        <button class="qb" data-s="home"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1z"/></svg><span>الشاشة الرئيسية</span></button>
+        <button class="qb" id="qacc"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9m-8 12h4"/></svg><span>إذن الموسيقى</span></button>
+      </div>
+      <h3>مستوى الصوت</h3><input type="range" id="vo" min="0" max="100">
+    </div>
+  </details>
 </div>
 <div id="dr"><div id="dg"></div></div>
 
@@ -223,6 +352,10 @@ function setTheme(t){document.body.dataset.t=t;document.documentElement.dataset.
 $('#wps').innerHTML=WP.map(([k,n])=>`<button class="wp" data-t="${k}">${n}</button>`).join('');
 $$('.wp').forEach(w=>w.onclick=()=>setTheme(w.dataset.t));
 setTheme(ST('t','forest'));
+let bgMotion=ST('bgMotion','1')==='1';
+document.body.classList.toggle('motion-off',!bgMotion);
+$('#bgMotion').classList.toggle('on',bgMotion);
+$('#bgMotion').onclick=()=>{bgMotion=!bgMotion;SV('bgMotion',bgMotion?'1':'0');document.body.classList.toggle('motion-off',!bgMotion);$('#bgMotion').classList.toggle('on',bgMotion)};
 let h24=ST('h24','0')==='1';$('#s24').classList.toggle('on',h24);
 $('#s24').onclick=()=>{h24=!h24;SV('h24',h24?1:0);$('#s24').classList.toggle('on',h24);tick(true)};
 $('#br').value=ST('br',80);A.brightness(+$('#br').value);
@@ -311,7 +444,8 @@ function loadDrawer(){const g=$('#dg');g.dataset.l='1';let L=allApps();
 renderDock();
 
 
-/* ---------- matches ---------- */
+
+/* ---------- favorite teams and match schedules ---------- */
 const KEY='123';
 const TEAM_DEFAULT=[
  {id:'133739',n:'برشلونة',c:'#a50044'},
@@ -321,41 +455,96 @@ const TEAM_DEFAULT=[
 ];
 let TEAMS=[];try{TEAMS=JSON.parse(ST('teams',JSON.stringify(TEAM_DEFAULT)))}catch(e){TEAMS=TEAM_DEFAULT}
 if(!Array.isArray(TEAMS))TEAMS=TEAM_DEFAULT;
+let matchesLoading=false,matchError=false;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function saveTeams(){SV('teams',JSON.stringify(TEAMS));renderTeamSettings();renderMatches();loadMatches()}
 function renderTeamSettings(){
  const g=$('#teamChoices');if(!g)return;
- g.innerHTML=TEAMS.map(t=>`<div class="team-choice"><span>${t.n}</span><button class="team-remove" data-team-remove="${t.id}">إزالة</button></div>`).join('')||'<div class="pref-hint">لم تختر أي نادٍ بعد. أضف ناديك المفضل من الحقل أعلاه.</div>';
+ g.innerHTML=TEAMS.map(t=>`<div class="team-choice"><span class="team-symbol"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m12 7 3 2-1 4h-4L9 9zm-3 2-3-1m8 2 4 1m-8 2-2 4m6-4 3 4"/></svg></span><span>${esc(t.n)}</span><button class="team-remove" data-team-remove="${esc(t.id)}"><svg viewBox="0 0 24 24"><path d="M5 5l14 14M19 5 5 19"/></svg>إزالة</button></div>`).join('')||'<div class="match-empty">ما اخترت أندية لسه. ابحث عن ناديك وأضفه من هنا.</div>';
  $$('[data-team-remove]').forEach(b=>b.onclick=()=>{TEAMS=TEAMS.filter(t=>String(t.id)!==String(b.dataset.teamRemove));saveTeams()});
 }
+const TEAM_ALIASES={
+ 'برشلونة':'Barcelona','برشلونه':'Barcelona','ريال مدريد':'Real Madrid',
+ 'مانشستر يونايتد':'Manchester United','مان يونايتد':'Manchester United',
+ 'باريس سان جيرمان':'Paris Saint-Germain','باريس':'Paris Saint-Germain',
+ 'ليفربول':'Liverpool','ارسنال':'Arsenal','أرسنال':'Arsenal',
+ 'مانشستر سيتي':'Manchester City','بايرن ميونخ':'Bayern Munich',
+ 'يوفنتوس':'Juventus','الهلال':'Al-Hilal','النصر':'Al-Nassr','الأهلي':'Al Ahly'
+};
 async function addTeam(){
- const input=$('#teamSearch'),name=input.value.trim();if(!name){toast('اكتب اسم النادي أولاً');return}
- if(TEAMS.length>=4){toast('يمكن عرض 4 أندية كحد أقصى');return}
+ const input=$('#teamSearch'),typed=input.value.trim();if(!typed){toast('اكتب اسم النادي أولاً');return}
+ if(TEAMS.length>=4){toast('يمكنك إضافة 4 أندية كحد أقصى');return}
+ const query=TEAM_ALIASES[typed]||typed;
  const btn=$('#teamSearchBtn');btn.disabled=true;btn.textContent='...';
  try{
-  const r=await fetch('https://www.thesportsdb.com/api/v1/json/'+KEY+'/searchteams.php?t='+encodeURIComponent(name));
+  const r=await fetch('https://www.thesportsdb.com/api/v1/json/'+KEY+'/searchteams.php?t='+encodeURIComponent(query));
+  if(!r.ok)throw new Error('search failed');
   const j=await r.json(),x=j.teams&&j.teams[0];
-  if(!x){toast('لم يتم العثور على النادي');return}
+  if(!x){toast('ما لقينا النادي. جرّب اسمه بالإنجليزي');return}
   if(TEAMS.some(t=>String(t.id)===String(x.idTeam))){toast('هذا النادي موجود بالفعل');return}
   const raw=String(x.strColour1||'').replace('#','');
   const color=/^[0-9a-f]{6}$/i.test(raw)?'#'+raw:'#888888';
-  TEAMS.push({id:String(x.idTeam),n:x.strTeam||name,c:color});input.value='';saveTeams();toast('تمت إضافة '+(x.strTeam||name));
- }catch(e){toast('تعذر البحث، تحقق من الاتصال بالإنترنت')}
- finally{btn.disabled=false;btn.textContent='إضافة'}
+  TEAMS.push({id:String(x.idTeam),n:x.strTeam||typed,c:color,badge:x.strBadge||''});
+  input.value='';saveTeams();toast('تمت إضافة '+(x.strTeam||typed));
+ }catch(e){toast('تعذر البحث عن النادي. تحقق من الإنترنت وحاول مجدداً')}
+ finally{btn.disabled=false;btn.innerHTML='<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>إضافة'}
 }
 $('#teamSearchBtn').onclick=addTeam;
 $('#teamSearch').onkeydown=e=>{if(e.key==='Enter')addTeam()};
-renderTeamSettings();
-function renderMatches(){let L=[];try{L=JSON.parse(ST('mt','[]'))}catch(e){}
+function eventDate(e){
+ if(e.ts){const d=new Date(e.ts);if(!isNaN(d))return d}
+ if(!e.d)return null;
+ const time=e.tm&&e.tm!=='00:00:00'?e.tm:'12:00:00';
+ const d=new Date(e.d+'T'+time);
+ return isNaN(d)?null:d;
+}
+function eventDateText(e){
+ const d=eventDate(e);if(!d)return esc(e.d||'موعد غير محدد');
+ const hasTime=!!(e.tm&&e.tm!=='00:00:00')||!!e.ts;
+ const date=d.toLocaleDateString('ar-JO-u-nu-latn',{weekday:'long',day:'numeric',month:'long'});
+ return hasTime?date+' · '+d.toLocaleTimeString('ar-JO-u-nu-latn',{hour:'numeric',minute:'2-digit'}):date;
+}
+function matchCard(t,e,full){
+ const home=esc(e.h||'الفريق الأول'),away=esc(e.a||'الفريق الثاني');
+ const league=esc(e.l||'المباراة القادمة'),when=eventDateText(e);
+ if(!full)return `<div class="mc" style="--k:${esc(t.c||'#888')}"><small>${esc(t.n)}</small><div><bdi>${home}</bdi> × <bdi>${away}</bdi></div><span>${when}</span></div>`;
+ return `<div class="team-match-card"><div class="match-league">${league}</div><div class="match-fixture"><span>${home}</span><b>×</b><span>${away}</span></div><div class="match-time"><span><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>${when}</span></div></div>`;
+}
+function renderMatches(){
+ let L=[];try{L=JSON.parse(ST('mt','[]'))}catch(e){}
  const ids=TEAMS.map(t=>String(t.id));L=L.filter(x=>ids.includes(String(x.t&&x.t.id)));
- $('#mt').innerHTML=L.length?L.map(({t,e})=>{const d=new Date(e.d+'T'+(e.tm||'00:00:00')+(/Z|\+/.test(e.tm||'')?'':'Z'));
-  const ds=isNaN(d)?e.d:d.toLocaleString('ar-EG-u-nu-latn',{weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'});
-  return `<div class="mc" style="--k:${t.c}"><small>${t.n}</small><div><bdi>${e.h}</bdi> × <bdi>${e.a}</bdi></div><span>${ds}</span></div>`}).join(''):(TEAMS.length?'<div class="mc" style="--k:#888"><small>المباريات</small><div>جارٍ تحميل المباريات…</div></div>':'<div class="mc" style="--k:#888"><small>الأندية المفضلة</small><div>أضف أنديتك من الإعدادات</div></div>')}
-async function loadMatches(){const out=[];
- if(!TEAMS.length){SV('mt','[]');renderMatches();return}
- for(const t of TEAMS){try{const r=await fetch(`https://www.thesportsdb.com/api/v1/json/${KEY}/eventsnext.php?id=${t.id}`);const j=await r.json();const e=j.events&&j.events[0];
-  if(e)out.push({t,e:{h:e.strHomeTeam,a:e.strAwayTeam,d:e.dateEvent,tm:e.strTime,l:e.strLeague}})}catch(x){}}
- SV('mt',JSON.stringify(out));renderMatches()}
-renderMatches();loadMatches();setInterval(loadMatches,3*3600*1000);
+ $('#mt').innerHTML=L.length?L.map(x=>matchCard(x.t,x.e,false)).join(''):'<div class="mc" style="--k:#888"><small>الأندية المفضلة</small><div>'+(TEAMS.length?'جارٍ تحميل المباريات...':'أضف أنديتك من الإعدادات')+'</div></div>';
+ const g=$('#teamUpcoming');if(!g)return;
+ if(!TEAMS.length){g.innerHTML='<div class="match-empty">أضف ناديك المفضل حتى تظهر لك مواعيد مبارياته هنا.</div>';return}
+ if(!L.length){g.innerHTML='<div class="match-empty">'+(matchError?'تعذر جلب المواعيد حالياً. تحقق من اتصال الإنترنت واضغط تحديث.':'جارٍ جلب المباريات القادمة لأنديتك...')+'</div>';return}
+ g.innerHTML=L.map(x=>matchCard(x.t,x.e,true)).join('');
+}
+async function loadMatches(){
+ if(matchesLoading)return;
+ if(!TEAMS.length){SV('mt','[]');matchError=false;renderMatches();return}
+ matchesLoading=true;matchError=false;const refresh=$('#matchRefreshBtn');
+ if(refresh){refresh.disabled=true;refresh.innerHTML='<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>جارٍ التحديث'}
+ renderMatches();
+ const out=[];let failed=0;
+ for(const t of TEAMS){
+  try{
+   const r=await fetch('https://www.thesportsdb.com/api/v1/json/'+KEY+'/eventsnext.php?id='+encodeURIComponent(t.id));
+   if(!r.ok)throw new Error('schedule unavailable');
+   const j=await r.json(),events=Array.isArray(j.events)?j.events:[];
+   const e=events.find(x=>x.dateEvent)||events[0];
+   if(e)out.push({t,e:{h:e.strHomeTeam,a:e.strAwayTeam,d:e.dateEvent,tm:e.strTime,ts:e.strTimestamp,l:e.strLeague}});
+  }catch(x){failed++}
+ }
+ const previous=(()=>{try{return JSON.parse(ST('mt','[]'))}catch(e){return []}})();
+ if(out.length){SV('mt',JSON.stringify(out));matchError=failed>0}
+ else if(failed===TEAMS.length&&previous.length){matchError=true}
+ else if(failed===TEAMS.length){matchError=true;SV('mt','[]')}
+ matchesLoading=false;
+ if(refresh){refresh.disabled=false;refresh.innerHTML='<svg viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.5 9A7.5 7.5 0 0 1 18 6l2 2M4 16l2 2a7.5 7.5 0 0 0 12.5-3"/></svg>تحديث'}
+ renderMatches();
+}
+$('#matchRefreshBtn').onclick=loadMatches;
+renderTeamSettings();renderMatches();loadMatches();setInterval(loadMatches,3*3600*1000);
 
 
 /* ---------- media ---------- */
