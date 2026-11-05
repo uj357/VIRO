@@ -12,11 +12,10 @@ button{font:inherit;color:inherit;background:none;border:0}
 [data-t=ember]{--a:#0a0303;--b:#8a1a1a;--c:#5a2a0a;--t:#ffd8d0}
 [data-t=mono]{--a:#000;--b:#444;--c:#222;--t:#eee}
 #bg{position:fixed;inset:0;background:var(--a);overflow:hidden}
-.bl{position:absolute;border-radius:50%;opacity:.82;will-change:transform;animation:fl 26s ease-in-out infinite alternate;filter:blur(2px)}
+.bl{position:absolute;border-radius:50%;opacity:.7;will-change:transform;animation:fl 26s ease-in-out infinite alternate}
 .b1{width:70vw;height:70vw;left:-20vw;top:-30vw;background:radial-gradient(circle,var(--b),transparent 68%)}
 .b2{width:60vw;height:60vw;right:-15vw;bottom:-28vw;background:radial-gradient(circle,var(--c),transparent 68%);animation-duration:34s;animation-delay:-9s}
-.b3{width:40vw;height:40vw;right:22vw;top:2vh;background:radial-gradient(circle,var(--b),transparent 68%);opacity:.48;animation-duration:42s;animation-delay:-17s}
-.b4{width:38vw;height:38vw;left:35vw;bottom:5vh;background:radial-gradient(circle,var(--c),transparent 68%);opacity:.42;animation-duration:38s;animation-delay:-12s}
+.b3{width:40vw;height:40vw;right:22vw;top:2vh;background:radial-gradient(circle,var(--b),transparent 68%);opacity:.35;animation-duration:42s;animation-delay:-17s}
 .motion-off .bl{animation:none!important}
 @keyframes fl{to{transform:translate(9vw,7vh) scale(1.25)}}
 #bg::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 45% 45%,transparent 25%,rgba(0,0,0,.7))}
@@ -208,7 +207,7 @@ input[type=range]{width:100%;accent-color:#fff;height:5vh}
 
 </style></head>
 <body data-x>
-<div id="bg"><div class="bl b1"></div><div class="bl b2"></div><div class="bl b3"></div><div class="bl b4"></div></div>
+<div id="bg"><div class="bl b1"></div><div class="bl b2"></div><div class="bl b3"></div></div>
 
 <button id="sbtn" class="abs rise"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>الإعدادات</button>
 
@@ -575,7 +574,7 @@ function poll(){
  const pc=s.dur>0?Math.min(100,s.pos/s.dur*100):0;$('#pf').style.width=pc+'%';
  if(open.fs){$('#sf').style.width=pc+'%';$('#tp').textContent=fmt(s.pos);$('#td').textContent=fmt(s.dur)}
  showLyr(s.pos)}
-setInterval(poll,500);poll();
+setInterval(poll,1000);poll();
 
 $('#pp').onclick=()=>{A.cmd(playing?'pause':'play');setPlay(!playing)};
 $('#nx').onclick=()=>A.cmd('next');$('#pv').onclick=()=>A.cmd('prev');
